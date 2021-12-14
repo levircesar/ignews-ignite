@@ -10,3 +10,10 @@ O projeto usa
   1) Next Js
   2) FaunaDB
   3) Stripe
+
+dica stripe, para exibir dados do produto apartir do price, use:
+```
+const price  = await stripe.prices.retrieve(priceId , {
+    expand: ['product']
+  })
+```
