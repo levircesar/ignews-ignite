@@ -18,3 +18,9 @@ const price  = await stripe.prices.retrieve(priceId , {
     expand: ['product']
   })
 ```
+
+Comando terminal do stripe para escutar webhooks locais
+
+```
+stripe listen --forward-to localhost:3000/api/webhooks 
+```

@@ -1,23 +1,23 @@
-import Head from "next/head";
-import styles from "./styles.module.scss";
-import Prismic from "@prismicio/client"
+import Head from 'next/head'
+import styles from './styles.module.scss'
+import Prismic from '@prismicio/client'
 import { RichText } from 'prismic-dom'
-import { GetStaticProps } from "next";
-import { getPrismicClient } from "../../services/prismic";
-import Link from "next/link";
+import { GetStaticProps } from 'next'
+import { getPrismicClient } from '../../services/prismic'
+import Link from 'next/link'
 
 type Post = {
-  slug: string;
-  title: string;
-  excerpt: string;
-  updatedAt: string;
+  slug: string
+  title: string
+  excerpt: string
+  updatedAt: string
 }
 
-interface PostsProps{
+interface PostsProps {
   posts: Post[]
 }
 
-export default function Posts({posts} : PostsProps) {
+export default function Posts({ posts }: PostsProps) {
   return (
     <>
       <Head>
@@ -31,46 +31,48 @@ export default function Posts({posts} : PostsProps) {
               <a>
                 <time>{post.updatedAt}</time>
                 <strong>{post.title}</strong>
-                <p>
-                  {post.excerpt}
-                </p>
+                <p>{post.excerpt}</p>
               </a>
             </Link>
           ))}
         </div>
       </main>
     </>
-  );
+  )
 }
-
 
 export const getStaticProps: GetStaticProps = async () => {
   const prismic = getPrismicClient()
 
-  const response = await prismic.query<any>([
-    Prismic.predicates.at('document.type','post')
-  ], {
-    fetch: ['post.title', 'post.content'],
-    pageSize: 100,
-  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const response = await prismic.query<any>(
+    [Prismic.predicates.at('document.type', 'post')],
+    {
+      fetch: ['post.title', 'post.content'],
+      pageSize: 100
+    }
   )
   console.log(response)
   // console.log(JSON.stringify(response, null , 2))
   const posts = response.results.map(post => {
     return {
-      slug:post.uid,
+      slug: post.uid,
       title: RichText.asText(post.data.title),
-      excerpt: post.data.content.find(content => content.type ==='paragraph')?.text ?? '',
-      updatedAt: new Date(post.last_publication_date).toLocaleDateString('pt-BR', {
-        day: '2-digit',
+      excerpt:
+        post.data.content.find(content => content.type === 'paragraph')?.text ??
+        '',
+      updatedAt: new Date(post.last_publication_date).toLocaleDateString(
+        'pt-BR',
+        {
+          day: '2-digit',
 
-        month: 'long',
-        year: 'numeric'
-      })
-
+          month: 'long',
+          year: 'numeric'
+        }
+      )
     }
   })
   return {
-    props:{posts}
+    props: { posts }
   }
 }
