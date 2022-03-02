@@ -26,7 +26,7 @@ export default function PostPreview({post} : PostPreviewProps){
       router.push(`/posts/${post.slug}`)
     }
   },[session])
-
+ 
   return (
     <>
       <Head>
@@ -81,6 +81,7 @@ export const getStaticProps : GetStaticProps = async ({ params }) => {
   return {
     props: {
       post,
-    }
+    },
+    redirect: 60 * 30 , // 30 minutes
   }
 }
